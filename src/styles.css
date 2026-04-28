@@ -4619,6 +4619,123 @@ button:hover:not(:disabled),
   font-weight: 700;
 }
 
+.study-guide-section {
+  display: grid;
+  gap: 20px;
+}
+
+.section-heading {
+  max-width: 780px;
+}
+
+.section-kicker {
+  display: inline-flex;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #eef4ff;
+  color: #1d4ed8;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section-heading h2 {
+  margin-bottom: 8px;
+}
+
+.section-heading p {
+  margin: 0;
+}
+
+.guide-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.guide-card {
+  padding: 22px;
+  border: 1px solid #e3e8ef;
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, #ffffff, #f8fbff);
+  box-shadow: var(--shadow-soft);
+}
+
+.guide-tag {
+  display: inline-flex;
+  margin-bottom: 14px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: #eef4ff;
+  color: #1d4ed8;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.guide-tag.tmk {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.guide-card h3,
+.test-type-card h3 {
+  margin: 0 0 8px;
+  color: #101828;
+}
+
+.guide-card p,
+.test-type-card p {
+  margin: 0;
+}
+
+.guide-card ul {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding-left: 20px;
+  color: #475467;
+}
+
+.guide-card li {
+  padding-left: 2px;
+}
+
+.test-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.test-type-card {
+  min-height: 210px;
+  padding: 18px;
+  border: 1px solid #e3e8ef;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.test-type-card strong,
+.test-type-card span {
+  display: block;
+}
+
+.test-type-card strong {
+  margin-top: 16px;
+  color: #172033;
+  font-size: 0.9rem;
+}
+
+.test-type-card span {
+  margin-top: 4px;
+  color: #475467;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 section,
 .session-restore-section,
 .mode-selection-section,
@@ -5060,6 +5177,11 @@ textarea:focus {
   }
 
   .insight-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-overview,
+  .test-type-grid {
     grid-template-columns: 1fr;
   }
 
