@@ -1385,14 +1385,23 @@ async function continueStoredSession() {
     }
 }
 
-function deleteStoredSession() {
-    if (confirm('Hapus sesi latihan yang tersimpan? Progres akan hilang dan tidak dapat dikembalikan.')) {
+async function deleteStoredSession() {
+    const confirmed = await showConfirmDialog({
+        title: 'Hapus Sesi Tersimpan?',
+        message: 'Sesi latihan yang belum selesai akan dihapus dan tidak dapat dikembalikan.',
+        confirmText: 'Hapus Sesi',
+        cancelText: 'Batal',
+        variant: 'danger'
+    });
+
+    if (confirmed) {
         try {
             storageService.clearSession();
             
             // Hide restore panel and show mode selection
             document.getElementById('session-restore-section').style.display = 'none';
             showModeSelection();
+            showToast('Sesi latihan tersimpan berhasil dihapus.', 'success', 'Sesi dihapus');
             
             console.log('🗑️ Sesi tersimpan dihapus');
             
@@ -1964,19 +1973,28 @@ function renderAnswersList(answers) {
     `).join('');
 }
 
-function deleteHistory(historyId) {
+async function deleteHistory(historyId) {
     if (!historyService) {
         showError('History service tidak tersedia');
         return;
     }
 
-    if (confirm('Hapus riwayat latihan ini?\n\nRiwayat yang dihapus tidak dapat dikembalikan.')) {
+    const confirmed = await showConfirmDialog({
+        title: 'Hapus Riwayat Ini?',
+        message: 'Riwayat latihan yang dihapus tidak dapat dikembalikan.',
+        confirmText: 'Hapus Riwayat',
+        cancelText: 'Batal',
+        variant: 'danger'
+    });
+
+    if (confirmed) {
         try {
             const success = historyService.deleteHistory(historyId);
             if (success) {
                 // Refresh history list
                 renderHistoryList();
                 renderHistoryStats();
+                showToast('Riwayat latihan berhasil dihapus.', 'success', 'Riwayat dihapus');
                 console.log('🗑️ Riwayat dihapus:', historyId);
             } else {
                 showError('Gagal menghapus riwayat');
@@ -1988,14 +2006,23 @@ function deleteHistory(historyId) {
     }
 }
 
-function deleteCurrentHistory() {
+async function deleteCurrentHistory() {
     if (window.currentHistoryId) {
-        if (confirm('Hapus riwayat latihan ini?\n\nRiwayat yang dihapus tidak dapat dikembalikan.')) {
+        const confirmed = await showConfirmDialog({
+            title: 'Hapus Riwayat Ini?',
+            message: 'Riwayat latihan yang dihapus tidak dapat dikembalikan.',
+            confirmText: 'Hapus Riwayat',
+            cancelText: 'Batal',
+            variant: 'danger'
+        });
+
+        if (confirmed) {
             try {
                 const success = historyService.deleteHistory(window.currentHistoryId);
                 if (success) {
                     // Go back to history list
                     showHistorySection();
+                    showToast('Riwayat latihan berhasil dihapus.', 'success', 'Riwayat dihapus');
                     console.log('🗑️ Riwayat dihapus:', window.currentHistoryId);
                 } else {
                     showError('Gagal menghapus riwayat');
@@ -2008,7 +2035,7 @@ function deleteCurrentHistory() {
     }
 }
 
-function clearAllHistory() {
+async function clearAllHistory() {
     if (!historyService) {
         showError('History service tidak tersedia');
         return;
@@ -2016,17 +2043,26 @@ function clearAllHistory() {
 
     const history = historyService.getHistory();
     if (history.length === 0) {
-        alert('Tidak ada riwayat untuk dihapus');
+        showToast('Tidak ada riwayat latihan untuk dihapus.', 'info', 'Riwayat kosong');
         return;
     }
 
-    if (confirm(`Hapus semua ${history.length} riwayat latihan?\n\nSemua riwayat akan dihapus permanen dan tidak dapat dikembalikan.`)) {
+    const confirmed = await showConfirmDialog({
+        title: 'Hapus Semua Riwayat?',
+        message: `Semua ${history.length} riwayat latihan akan dihapus permanen dan tidak dapat dikembalikan.`,
+        confirmText: 'Hapus Semua',
+        cancelText: 'Batal',
+        variant: 'danger'
+    });
+
+    if (confirmed) {
         try {
             const success = historyService.clearHistory();
             if (success) {
                 // Refresh display
                 renderHistoryList();
                 renderHistoryStats();
+                showToast('Semua riwayat latihan berhasil dihapus.', 'success', 'Riwayat dikosongkan');
                 console.log('🧹 Semua riwayat dihapus');
             } else {
                 showError('Gagal menghapus semua riwayat');
@@ -2227,26 +2263,7 @@ function downloadProgress() {
 }
 
 function resetProgress() {
-    if (!progressService) {
-        showError('Progress service tidak tersedia');
-        return;
-    }
-
-    if (confirm('Reset semua progres soal yang pernah dikerjakan?\n\nProgres yang direset tidak dapat dikembalikan.\n\nCatatan: Riwayat latihan dan sesi aktif tidak akan terhapus.')) {
-        try {
-            const success = progressService.resetSeenProgress();
-            if (success) {
-                // Refresh progress display
-                renderProgressSection();
-                console.log('🧹 Progress berhasil direset');
-            } else {
-                showError('Gagal mereset progress');
-            }
-        } catch (error) {
-            console.error('Error resetting progress:', error);
-            showError('Error mereset progress: ' + error.message);
-        }
-    }
+    return resetProgressWithDialog();
 }
 
 async function resetProgressWithDialog() {
