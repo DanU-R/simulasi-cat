@@ -1,202 +1,182 @@
 # Simulasi CAT KDKMP
 
-Aplikasi simulasi Computer Assisted Test (CAT) untuk Kementerian Desa, Pembangunan Daerah Tertinggal, dan Transmigrasi (KDKMP) berbasis web dengan fitur lengkap untuk latihan soal TPK dan TMK.
+Aplikasi simulasi Computer Assisted Test (CAT) untuk latihan mandiri TPK dan TMK KDKMP. Aplikasi ini berjalan sebagai web app ringan dengan bank soal lokal, timer, review jawaban, riwayat latihan, progress tracking, dan opsi membuat soal latihan baru menggunakan AI melalui SwiftRouter.
 
-## ⚠️ DISCLAIMER PENTING
+## Disclaimer Penting
 
-**SEMUA SOAL DALAM APLIKASI INI ADALAH SOAL PREDIKSI ORISINAL UNTUK KEPERLUAN LATIHAN, BUKAN SOAL RESMI DAN BUKAN BOCORAN UJIAN.**
+**Semua soal dalam aplikasi ini adalah materi latihan/prediksi orisinal. Soal bukan soal resmi, bukan bocoran ujian, dan tidak berafiliasi dengan panitia atau instansi penyelenggara ujian.**
 
-Aplikasi ini dibuat untuk membantu persiapan ujian dengan menyediakan simulasi yang mirip dengan format CAT KDKMP. Skor yang diperoleh adalah skor latihan internal dan **BUKAN NILAI RESMI** ujian.
+Sebagian soal dapat dibuat atau dikembangkan dengan bantuan AI untuk kebutuhan latihan mandiri. Soal AI bersifat generatif, dapat mengandung kekeliruan, dan sebaiknya ditinjau kembali sebelum dipakai sebagai referensi belajar utama.
 
-## 🚀 Cara Install dan Menjalankan
+Skor yang ditampilkan adalah skor latihan internal aplikasi. Skor tersebut **bukan nilai resmi**, bukan indikator kelulusan, dan tidak menjamin hasil ujian sebenarnya.
+
+## Fitur Utama
+
+- Mode latihan TPK, TMK, dan gabungan.
+- Latihan bebas TPK berdasarkan subkategori.
+- Timer otomatis dan durasi custom.
+- Review jawaban dengan pembahasan dan alasan opsi.
+- Riwayat latihan lokal di browser.
+- Progress soal yang pernah dikerjakan.
+- Export hasil dan progress ke JSON.
+- Generator soal AI berbasis SwiftRouter API.
+- UI modern dan responsive untuk desktop/mobile.
+
+## Menjalankan Aplikasi
 
 ### Prasyarat
-- Node.js (untuk menjalankan server lokal)
-- Browser modern (Chrome, Firefox, Safari, Edge)
 
-### Langkah Instalasi
-1. Clone atau download repository ini
-2. Buka terminal/command prompt di folder aplikasi
-3. Jalankan perintah:
-   ```bash
-   npm start
-   ```
-4. Buka browser dan akses URL yang ditampilkan (biasanya `http://localhost:3000`)
+- Node.js
+- Browser modern seperti Chrome, Edge, Firefox, atau Safari
 
-### Alternatif Tanpa Node.js
-Jika tidak memiliki Node.js, buka file `index.html` langsung di browser. Namun beberapa fitur mungkin tidak berfungsi optimal.
+### Instalasi
 
-## 🧪 Cara Validasi dan Testing
+```bash
+npm start
+```
 
-### Validasi Bank Soal
+Lalu buka:
+
+```text
+http://localhost:4173
+```
+
+## Konfigurasi AI SwiftRouter
+
+Fitur **Buat Soal AI** membutuhkan API key SwiftRouter dan hanya berjalan lewat server lokal/app server. Jangan menaruh API key langsung di kode frontend.
+
+1. Salin contoh environment:
+
+```bash
+cp .env.example .env
+```
+
+2. Isi `.env`:
+
+```env
+SWIFTROUTER_API_KEY=isi_key_swiftrouter
+SWIFTROUTER_MODEL=gpt-5.4-mini
+PORT=4173
+```
+
+3. Restart server setelah mengubah `.env`:
+
+```bash
+npm start
+```
+
+Catatan: `.env` sudah masuk `.gitignore` dan tidak boleh dipush ke GitHub.
+
+## Testing
+
+Validasi bank soal:
+
 ```bash
 npm run validate:questions
 ```
 
-### Test Semua Komponen
+Jalankan semua test:
+
 ```bash
 npm run test:all
 ```
 
-### Test Individual
+Test individual:
+
 ```bash
-npm run test:quiz      # Test quiz engine
-npm run test:storage   # Test localStorage
-npm run test:export    # Test export functionality
-npm run test:history   # Test history management
+npm run test:quiz
+npm run test:storage
+npm run test:export
+npm run test:history
+npm run test:progress
+npm run test:unseen
+npm run test:subcategory
 ```
 
-## 🎯 Fitur Aplikasi
+## Mode Latihan
 
-### 1. **Mode Latihan**
-- **Latihan Bebas TPK**: Pilih subkategori dan jumlah soal TPK
-- **Simulasi TPK**: 85 soal TPK lengkap (85 menit)
-- **Simulasi TMK**: 20 soal TMK lengkap (20 menit)
-- **Simulasi Gabungan**: TPK + TMK (105 menit)
+- **Latihan Bebas TPK**: pilih subkategori dan jumlah soal TPK.
+- **Simulasi TPK**: 85 soal TPK lengkap.
+- **Simulasi TMK**: 20 soal TMK lengkap.
+- **Simulasi Gabungan**: TPK + TMK.
+- **Soal AI**: pilih kategori, subkategori, dan jumlah soal untuk membuat latihan baru.
 
-### 2. **Pengerjaan Soal**
-- Interface mirip CAT asli
-- Navigasi antar soal dengan nomor
-- Indikator soal terjawab/belum
-- Konfirmasi sebelum selesai
+## Aturan Skor Latihan
 
-### 3. **Timer Latihan**
-- Timer otomatis sesuai mode
-- Durasi custom (1-180 menit)
-- Visual warning saat waktu hampir habis
-- Auto-finish saat waktu habis
+### TPK
 
-### 4. **Review Jawaban**
-- Detail pembahasan setiap soal
-- Penjelasan setiap opsi jawaban
-- Filter jawaban (Semua/Benar/Salah/Kosong)
-- Cara cepat mengerjakan
+- Benar: +1 poin
+- Salah: 0 poin
+- Kosong: 0 poin
 
-### 5. **Export dan Cetak**
-- Cetak hasil dengan layout rapi
-- Download hasil dalam format JSON
-- Data ringkas tanpa isi soal penuh
+### TMK
 
-### 6. **Riwayat Latihan Lokal**
-- Simpan otomatis setiap latihan selesai
-- Statistik performa keseluruhan
-- Detail ringkas per latihan
-- Download riwayat lengkap
-- Maksimal 20 riwayat terakhir
+- Benar: +5 poin
+- Salah: 0 poin
+- Kosong: 0 poin
 
-### 7. **Lanjutkan Sesi**
-- Auto-save progres setiap aksi
-- Lanjutkan sesi setelah refresh browser
-- Restore timer dan jawaban
-- Hapus progres kapan saja
+## Bank Soal Lokal
 
-## 📊 Aturan Skor Latihan
+### TPK
 
-### TPK (Tes Potensi Kognitif)
-- **Benar**: +1 poin
-- **Salah**: 0 poin
-- **Kosong**: 0 poin
+- Bahasa/Verbal: 15 soal
+- Hitungan/Numerik: 20 soal
+- Pengetahuan Umum: 15 soal
+- Pola Gambar: 15 soal
+- Abstraksi Ruang: 10 soal
+- Bentuk/Menentukan Bentuk: 10 soal
 
-### TMK (Tes Manajerial Koperasi)
-- **Benar**: +5 poin
-- **Salah**: 0 poin
-- **Kosong**: 0 poin
+### TMK
 
-### Catatan Penting
-- Skor ini adalah **skor latihan internal** untuk keperluan belajar
-- **BUKAN nilai resmi** ujian CAT KDKMP
-- Tidak ada status ambang batas atau prediksi kelulusan
-- Tidak ada sistem ranking
+- Prinsip Koperasi: 3 soal
+- Tata Kelola: 5 soal
+- Pengelolaan Usaha: 4 soal
+- Pengelolaan Keuangan: 3 soal
+- Pelayanan Anggota: 3 soal
+- Pengembangan Kelembagaan: 2 soal
 
-## 📁 Struktur Folder Penting
+## Struktur Folder
 
-```
+```text
 simulasi-cat-kdkmp/
-├── data/
-│   └── questions/          # Bank soal JSON
-│       ├── tpk_bahasa.json
-│       ├── tpk_hitungan.json
-│       ├── tpk_pengetahuan_umum.json
-│       ├── tpk_pola_gambar.json
-│       ├── tpk_abstraksi_ruang.json
-│       ├── tpk_bentuk.json
-│       ├── tmk.json
-│       └── index.json
-├── src/                    # Source code aplikasi
-│   ├── app.js             # Main application
-│   ├── quiz-engine.js     # Quiz logic
-│   ├── quiz-ui.js         # User interface
-│   ├── question-service.js # Question management
-│   ├── mode-config.js     # Mode configuration
-│   ├── storage-service.js # localStorage management
-│   ├── export-service.js  # Export functionality
-│   ├── history-service.js # History management
-│   └── styles.css         # Styling
-├── tools/                  # Testing tools
-│   ├── validate-questions.js
-│   ├── test-quiz-engine.js
-│   ├── test-storage.js
-│   ├── test-export.js
-│   └── test-history.js
-├── index.html             # Main HTML file
-├── package.json           # NPM configuration
-└── README.md             # This file
+├── data/questions/          # Bank soal JSON
+├── src/                     # Source code aplikasi
+│   ├── app.js
+│   ├── quiz-engine.js
+│   ├── quiz-ui.js
+│   ├── question-service.js
+│   ├── mode-config.js
+│   ├── storage-service.js
+│   ├── export-service.js
+│   ├── history-service.js
+│   ├── progress-service.js
+│   └── styles.css
+├── tools/                   # Script validasi dan testing
+├── index.html
+├── server.js
+├── package.json
+└── README.md
 ```
 
-## 🎓 Bank Soal
+## Teknologi
 
-### TPK (85 soal total)
-- **Bahasa/Verbal**: 15 soal
-- **Hitungan/Numerik**: 20 soal
-- **Pengetahuan Umum**: 15 soal
-- **Pola Gambar**: 15 soal
-- **Abstraksi Ruang**: 10 soal
-- **Bentuk/Menentukan Bentuk**: 10 soal
+- Frontend: HTML5, CSS3, Vanilla JavaScript
+- Server lokal/API proxy: Node.js
+- Storage: localStorage browser
+- AI provider: SwiftRouter API
+- Testing: custom Node.js scripts
 
-### TMK (20 soal total)
-- **Prinsip Koperasi**: 3 soal
-- **Tata Kelola**: 5 soal
-- **Pengelolaan Usaha**: 4 soal
-- **Pengelolaan Keuangan**: 3 soal
-- **Pelayanan Anggota**: 3 soal
-- **Pengembangan Kelembagaan**: 2 soal
+## Deploy ke Vercel
 
-## 🔧 Teknologi yang Digunakan
+Saat deploy ke Vercel, tambahkan environment variable berikut di dashboard Vercel:
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Storage**: localStorage (browser)
-- **Server**: Node.js serve (untuk development)
-- **Testing**: Custom test scripts
-
-## 📱 Kompatibilitas
-
-- **Desktop**: Chrome, Firefox, Safari, Edge
-- **Mobile**: Responsive design untuk tablet dan smartphone
-- **Print**: Layout khusus untuk cetak hasil
-
-## 🛠️ Development
-
-### Menambah Soal Baru
-1. Edit file JSON di folder `data/questions/`
-2. Ikuti struktur schema yang ada
-3. Jalankan validasi: `npm run validate:questions`
-
-### Menjalankan Test
-```bash
-npm run test:all  # Test semua komponen
+```text
+SWIFTROUTER_API_KEY
+SWIFTROUTER_MODEL
 ```
 
-### Build untuk Production
-Aplikasi ini adalah static web app, cukup copy semua file ke web server.
+Pastikan API key tidak ditulis di file publik atau repository.
 
-## 📞 Support
+## Lisensi
 
-Untuk pertanyaan atau masalah teknis, silakan buat issue di repository ini.
-
-## 📄 Lisensi
-
-MIT License - Aplikasi ini dibuat untuk keperluan edukasi dan latihan.
-
----
-
-**Selamat berlatih dan semoga sukses dalam ujian CAT KDKMP!** 🎯
+MIT License. Aplikasi ini dibuat untuk kebutuhan edukasi dan latihan mandiri.
