@@ -5131,6 +5131,26 @@ textarea:focus {
   margin-top: 6px;
 }
 
+.no-timer-option {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-weight: 850;
+}
+
+.duration-hint {
+  display: block;
+  margin-top: 8px;
+  color: #475467;
+}
+
+.custom-duration-option:has(input:disabled) {
+  opacity: 0.58;
+}
+
 .quiz-header,
 .question-container,
 .navigation-panel,

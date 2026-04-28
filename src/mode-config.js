@@ -14,6 +14,7 @@ const TRAINING_MODES = {
         allowSubcategorySelection: true,
         allowCustomCount: true,
         allowCustomDuration: true,
+        allowNoTimer: true,
         defaultCount: 10,
         maxCount: null, // akan diset berdasarkan subkategori
         kategori: 'TPK',
@@ -129,6 +130,7 @@ class ModeConfigManager {
         this.questionCount = 0;
         this.durationMinutes = 0;
         this.useCustomDuration = false;
+        this.useNoTimer = false;
         this.prioritizeUnseen = true; // Default aktif untuk Latihan Bebas TPK
         this.questionService = null;
         this.progressService = null;
@@ -184,6 +186,7 @@ class ModeConfigManager {
         this.selectedSubcategory = null;
         this.questionCount = mode.defaultCount;
         this.useCustomDuration = false;
+        this.useNoTimer = false;
         this.updateDuration();
 
         console.log(`🎯 Mode dipilih: ${mode.name}`);
@@ -241,7 +244,7 @@ class ModeConfigManager {
      * Update durasi berdasarkan konfigurasi saat ini
      */
     updateDuration() {
-        if (!this.selectedMode || this.useCustomDuration) {
+        if (!this.selectedMode || this.useCustomDuration || this.useNoTimer) {
             return;
         }
 
@@ -259,10 +262,32 @@ class ModeConfigManager {
      */
     setUseCustomDuration(useCustom) {
         this.useCustomDuration = useCustom;
+        if (useCustom) {
+            this.useNoTimer = false;
+        }
         if (!useCustom) {
             this.updateDuration();
         }
         console.log(`⚙️ Custom duration: ${useCustom ? 'aktif' : 'nonaktif'}`);
+    }
+
+    /**
+     * Mengatur latihan tanpa batas waktu
+     */
+    setUseNoTimer(useNoTimer) {
+        if (!this.selectedMode || !this.selectedMode.allowNoTimer) {
+            throw new Error('Mode ini tidak mengizinkan latihan tanpa waktu');
+        }
+
+        this.useNoTimer = useNoTimer;
+        if (useNoTimer) {
+            this.useCustomDuration = false;
+            this.durationMinutes = 0;
+        } else {
+            this.updateDuration();
+        }
+
+        console.log(`Latihan tanpa waktu: ${useNoTimer ? 'aktif' : 'nonaktif'}`);
     }
 
     /**
@@ -563,8 +588,10 @@ class ModeConfigManager {
                 this.selectedMode.scoringType.toLowerCase()
             );
 
-            // Set timer duration
-            quizSession.setTimerDuration(this.durationMinutes * 60); // convert to seconds
+            // Set timer duration. Durasi 0 berarti latihan tanpa batas waktu.
+            if (this.durationMinutes > 0) {
+                quizSession.setTimerDuration(this.durationMinutes * 60); // convert to seconds
+            }
 
             console.log(`🎯 Quiz session berhasil dibuat: ${questions.length} soal, durasi: ${this.durationMinutes} menit`);
             return quizSession;
@@ -592,6 +619,7 @@ class ModeConfigManager {
             maxQuestions: this.getMaxQuestionCount(),
             durationMinutes: this.durationMinutes,
             useCustomDuration: this.useCustomDuration,
+            useNoTimer: this.useNoTimer,
             defaultDuration: this.getDefaultDuration()
         };
 
@@ -613,6 +641,7 @@ class ModeConfigManager {
         this.questionCount = 0;
         this.durationMinutes = 0;
         this.useCustomDuration = false;
+        this.useNoTimer = false;
         this.prioritizeUnseen = true; // Reset ke default aktif
         this.lastSelectionMessages = [];
         console.log('🔄 Konfigurasi mode direset');

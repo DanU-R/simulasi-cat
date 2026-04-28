@@ -628,6 +628,14 @@ function showConfigurationPanel(mode) {
                     <strong>Default: ${defaultDuration} menit</strong>
                     <small>(${mode.id === 'latihan-bebas-tpk' ? '1 menit per soal' : 'durasi standar'})</small>
                 </div>
+
+                ${mode.allowNoTimer ? `
+                    <label class="checkbox-label no-timer-option">
+                        <input type="checkbox" id="use-no-timer">
+                        <span>Latihan santai tanpa batas waktu</span>
+                    </label>
+                    <small class="duration-hint">Cocok untuk belajar materi dan membaca pembahasan tanpa tekanan timer.</small>
+                ` : ''}
                 
                 ${mode.allowCustomDuration ? `
                     <div class="custom-duration-option">
@@ -693,6 +701,14 @@ function setupConfigurationEvents(mode) {
         useCustomDurationCheckbox.addEventListener('change', (e) => {
             const useCustom = e.target.checked;
             toggleCustomDuration(useCustom);
+        });
+    }
+
+    // No timer checkbox
+    const useNoTimerCheckbox = document.getElementById('use-no-timer');
+    if (useNoTimerCheckbox) {
+        useNoTimerCheckbox.addEventListener('change', (e) => {
+            toggleNoTimer(e.target.checked);
         });
     }
 
@@ -837,11 +853,39 @@ function toggleCustomDuration(useCustom) {
                 customDurationField.value = defaultDuration;
             }
         }
+
+        const useNoTimerCheckbox = document.getElementById('use-no-timer');
+        if (useCustom && useNoTimerCheckbox) {
+            useNoTimerCheckbox.checked = false;
+        }
         
         validateConfiguration();
     } catch (error) {
         console.error('Error toggling custom duration:', error);
         showConfigError('Error mengatur durasi custom: ' + error.message);
+    }
+}
+
+function toggleNoTimer(useNoTimer) {
+    try {
+        modeConfigManager.setUseNoTimer(useNoTimer);
+
+        const useCustomDurationCheckbox = document.getElementById('use-custom-duration');
+        const customDurationInput = document.getElementById('custom-duration-input');
+
+        if (useCustomDurationCheckbox) {
+            useCustomDurationCheckbox.checked = false;
+            useCustomDurationCheckbox.disabled = useNoTimer;
+        }
+
+        if (customDurationInput) {
+            customDurationInput.style.display = 'none';
+        }
+
+        validateConfiguration();
+    } catch (error) {
+        console.error('Error toggling no timer:', error);
+        showConfigError('Error mengatur latihan tanpa waktu: ' + error.message);
     }
 }
 
@@ -944,7 +988,7 @@ function showSessionSummary() {
         </div>
         <div class="summary-item">
             <span class="summary-label">Durasi:</span>
-            <span class="summary-value">${summary.durationMinutes} menit${summary.useCustomDuration ? ' (custom)' : ' (default)'}</span>
+            <span class="summary-value">${summary.useNoTimer ? 'Tanpa batas waktu' : `${summary.durationMinutes} menit${summary.useCustomDuration ? ' (custom)' : ' (default)'}`}</span>
         </div>
     `;
 
