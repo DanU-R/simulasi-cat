@@ -1,0 +1,22 @@
+{
+  "name": "simulasi-cat-kdkmp",
+  "version": "1.0.0",
+  "description": "Simulasi CAT KDKMP - Bank Soal dan Validasi",
+  "main": "server.js",
+  "scripts": {
+    "validate:questions": "node tools/validate-questions.js",
+    "test:quiz": "node tools/test-quiz-engine.js",
+    "test:storage": "node tools/test-storage.js",
+    "test:export": "node tools/test-export.js",
+    "test:history": "node tools/test-history.js",
+    "test:subcategory": "node tools/test-subcategory-mapping.js",
+    "test:progress": "node tools/test-progress.js",
+    "test:unseen": "node tools/test-unseen-selection.js",
+    "test:all": "npm run validate:questions && npm run test:quiz && npm run test:storage && npm run test:export && npm run test:history && npm run test:subcategory && npm run test:progress && npm run test:unseen",
+    "start": "node server.js",
+    "start:static": "npx serve ."
+  },
+  "keywords": ["cat", "kdkmp", "simulasi", "bank-soal"],
+  "author": "",
+  "license": "MIT"
+}

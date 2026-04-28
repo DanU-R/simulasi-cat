@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi CAT KDKMP</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Cpath d='M18 17h28v30H18z' fill='white' opacity='.95'/%3E%3Cpath d='M24 25h16M24 32h16M24 39h10' stroke='%232563eb' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="app-topbar" aria-label="Navigasi utama">
+            <a class="brand-mark" href="#">
+                <span class="brand-icon">CAT</span>
+                <span>
+                    <strong>CAT KDKMP</strong>
+                    <small>Practice Studio</small>
+                </span>
+            </a>
+            <div class="topbar-actions">
+                <a href="#mode-selection-section">Mode</a>
+                <a href="#summary-section">Bank Soal</a>
+                <a href="#progress-section">Progres</a>
+            </div>
+        </nav>
+
+        <header class="header landing-hero">
+            <div class="hero-copy">
+                <div class="hero-kicker">CAT Practice Lab</div>
+                <h1>Simulasi CAT KDKMP</h1>
+                <p class="subtitle">Latihan mandiri berbasis bank soal prediksi orisinal dengan timer, progres, dan review jawaban.</p>
+                <div class="hero-badges" aria-label="Fitur utama">
+                    <span>Timer latihan</span>
+                    <span>Review jawaban</span>
+                    <span>Soal AI opsional</span>
+                </div>
+                <div class="hero-actions">
+                    <a class="btn-primary hero-primary" href="#mode-selection-section">Mulai Latihan</a>
+                    <a class="btn-secondary hero-secondary" href="#summary-section">Lihat Bank Soal</a>
+                </div>
+                <div class="disclaimer">
+                    Seluruh soal dalam aplikasi ini adalah soal prediksi orisinal untuk latihan, 
+                    bukan soal resmi dan bukan bocoran.
+                </div>
+            </div>
+
+            <div class="hero-visual" aria-hidden="true">
+                <div class="hero-screen">
+                    <div class="screen-topbar">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="screen-status">
+                        <div>
+                            <span class="screen-label">Mode</span>
+                            <strong>Gabungan</strong>
+                        </div>
+                        <div>
+                            <span class="screen-label">Timer</span>
+                            <strong>105:00</strong>
+                        </div>
+                    </div>
+                    <div class="screen-question">
+                        <span class="question-pill">TPK</span>
+                        <div class="question-line wide"></div>
+                        <div class="question-line"></div>
+                    </div>
+                    <div class="screen-options">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="screen-progress">
+                        <span></span>
+                        <span class="active"></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="hero-stat-stack">
+                    <div class="hero-stat">
+                        <strong>105</strong>
+                        <span>Total soal</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>7</strong>
+                        <span>Bank file</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <section class="insight-strip" aria-label="Ringkasan fitur">
+                <div class="insight-item">
+                    <span class="insight-label">Bank soal</span>
+                    <strong>105 soal</strong>
+                    <small>TPK dan TMK siap latihan</small>
+                </div>
+                <div class="insight-item">
+                    <span class="insight-label">Mode</span>
+                    <strong>4 pilihan</strong>
+                    <small>Bebas, simulasi, dan gabungan</small>
+                </div>
+                <div class="insight-item">
+                    <span class="insight-label">AI practice</span>
+                    <strong>1-20 soal</strong>
+                    <small>Pilih kategori agar lebih cepat</small>
+                </div>
+            </section>
+
+            <section class="loading-section">
+                <h2>Status Loading Bank Soal</h2>
+                <div id="loading-status" class="loading-status">
+                    <div class="spinner"></div>
+                    <p>Memuat bank soal...</p>
+                </div>
+            </section>
+
+            <section id="session-restore-section" class="session-restore-section" style="display: none;">
+                <h2>Sesi Latihan Ditemukan</h2>
+                <div class="restore-panel" id="restore-panel">
+                    <!-- Restore panel akan diisi oleh JavaScript -->
+                </div>
+            </section>
+
+            <section id="mode-selection-section" class="mode-selection-section" style="display: none;">
+                <h2>Pilih Mode Latihan</h2>
+                <div class="mode-grid" id="mode-grid">
+                    <!-- Mode cards akan diisi oleh JavaScript -->
+                </div>
+                <div class="main-actions">
+                    <button id="history-btn" class="btn-secondary">📚 Riwayat Latihan</button>
+                </div>
+            </section>
+
+            <section id="history-section" class="history-section" style="display: none;">
+                <div class="history-page-header">
+                    <h2>Riwayat Latihan</h2>
+                    <button id="back-from-history-btn" class="btn-secondary">← Kembali ke Beranda</button>
+                </div>
+                
+                <div class="history-stats" id="history-stats">
+                    <!-- Stats akan diisi oleh JavaScript -->
+                </div>
+                
+                <div class="history-actions">
+                    <button id="download-history-btn" class="btn-secondary">📥 Download Riwayat JSON</button>
+                    <button id="clear-all-history-btn" class="btn-danger">🗑️ Hapus Semua Riwayat</button>
+                </div>
+                
+                <div class="history-content">
+                    <div id="history-list" class="history-list">
+                        <!-- History items akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="history-detail-section" class="history-detail-section" style="display: none;">
+                <div class="history-detail-content" id="history-detail-content">
+                    <!-- Detail content akan diisi oleh JavaScript -->
+                </div>
+                <div class="history-detail-actions">
+                    <button id="back-to-history-btn" class="btn-secondary">← Kembali ke Riwayat</button>
+                    <button id="delete-this-history-btn" class="btn-danger">🗑️ Hapus Riwayat Ini</button>
+                </div>
+            </section>
+
+            <section id="config-section" class="config-section" style="display: none;">
+                <h2>Konfigurasi Sesi</h2>
+                <div class="config-panel" id="config-panel">
+                    <!-- Configuration panel akan diisi oleh JavaScript -->
+                </div>
+            </section>
+
+            <section id="session-summary-section" class="session-summary-section" style="display: none;">
+                <h2>Sesi Berhasil Dibuat</h2>
+                <div class="session-summary" id="session-summary">
+                    <!-- Session summary akan diisi oleh JavaScript -->
+                </div>
+                <div class="session-actions">
+                    <button id="back-to-modes-btn" class="btn-secondary">Kembali ke Pilihan Mode</button>
+                </div>
+            </section>
+
+            <section id="summary-section" class="summary-section" style="display: none;">
+                <h2>Ringkasan Bank Soal</h2>
+                <div class="summary-grid" id="summary-grid">
+                    <!-- Summary cards akan diisi oleh JavaScript -->
+                </div>
+                
+                <div class="total-summary" id="total-summary">
+                    <!-- Total summary akan diisi oleh JavaScript -->
+                </div>
+            </section>
+
+            <section id="progress-section" class="progress-section" style="display: none;">
+                <h2>Progres Bank Soal</h2>
+                <div class="progress-content" id="progress-content">
+                    <!-- Progress content akan diisi oleh JavaScript -->
+                </div>
+                <div class="ai-question-panel">
+                    <div class="ai-field">
+                        <label for="ai-category-select">Kategori</label>
+                        <select id="ai-category-select">
+                            <option value="MIXED">Campuran</option>
+                            <option value="TPK">TPK</option>
+                            <option value="TMK">TMK</option>
+                        </select>
+                    </div>
+                    <div class="ai-field">
+                        <label for="ai-subcategory-select">Subkategori</label>
+                        <select id="ai-subcategory-select">
+                            <option value="">Semua subkategori</option>
+                        </select>
+                    </div>
+                    <div class="ai-field compact">
+                        <label for="ai-count-input">Jumlah</label>
+                        <input id="ai-count-input" type="number" min="1" max="20" value="5">
+                    </div>
+                    <button id="generate-ai-questions-btn" class="btn-primary">Buat Soal AI</button>
+                </div>
+                <div class="progress-actions">
+                    <button id="download-progress-btn" class="btn-secondary">📥 Download Progres JSON</button>
+                    <button id="reset-progress-btn" class="btn-danger">🧹 Reset Progres Soal</button>
+                </div>
+            </section>
+
+            <section id="error-section" class="error-section" style="display: none;">
+                <h2>Error Loading</h2>
+                <div id="error-details" class="error-details">
+                    <!-- Error details akan diisi oleh JavaScript -->
+                </div>
+            </section>
+
+            <section class="validation-section">
+                <h2>Validasi JSON</h2>
+                <p>Untuk menjalankan validasi lengkap bank soal, gunakan command berikut di terminal:</p>
+                <div class="command-box">
+                    <code>npm run validate:questions</code>
+                </div>
+                <button id="validation-btn" class="btn-secondary">
+                    Tampilkan Instruksi Validasi
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Simulasi CAT KDKMP | Latihan Mandiri</p>
+        </footer>
+    </div>
+
+    <script src="src/question-service.js"></script>
+    <script src="src/quiz-engine.js"></script>
+    <script src="src/mode-config.js"></script>
+    <script src="src/storage-service.js"></script>
+    <script src="src/export-service.js"></script>
+    <script src="src/history-service.js"></script>
+    <script src="src/progress-service.js"></script>
+    <script src="src/quiz-ui.js"></script>
+    <script src="src/app.js"></script>
+</body>
+</html>

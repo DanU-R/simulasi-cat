@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "total_tpk": 85,
+    "total_tmk": 20,
+    "total_keseluruhan": 105,
+    "disclaimer": "Semua soal adalah prediksi orisinal untuk latihan mandiri, bukan soal resmi, bukan bocoran, dan tidak menjamin kelulusan. Peserta wajib tetap memantau portal resmi PHTC Panselnas untuk informasi terbaru."
+  },
+  "files": {
+    "tpk_bahasa": "tpk_bahasa.json",
+    "tpk_hitungan": "tpk_hitungan.json",
+    "tpk_pengetahuan_umum": "tpk_pengetahuan_umum.json",
+    "tpk_pola_gambar": "tpk_pola_gambar.json",
+    "tpk_abstraksi_ruang": "tpk_abstraksi_ruang.json",
+    "tpk_bentuk": "tpk_bentuk.json",
+    "tmk": "tmk.json"
+  },
+  "counts": {
+    "tpk_bahasa": 15,
+    "tpk_hitungan": 20,
+    "tpk_pengetahuan_umum": 15,
+    "tpk_pola_gambar": 15,
+    "tpk_abstraksi_ruang": 10,
+    "tpk_bentuk": 10,
+    "tmk": 20
+  },
+  "available_files": 7
+}
