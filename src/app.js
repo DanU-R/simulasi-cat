@@ -1030,8 +1030,69 @@ function showModeSelection() {
 
 function showError(message) {
     console.error(message);
-    // Could implement a toast notification here
-    alert(message);
+    showToast(message, 'error');
+}
+
+function showToast(message, type = 'info', title = '') {
+    const container = getToastContainer();
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    const toastTitle = title || getToastTitle(type);
+    toast.innerHTML = `
+        <div class="toast-icon" aria-hidden="true">${getToastIcon(type)}</div>
+        <div class="toast-body">
+            <strong>${toastTitle}</strong>
+            <span>${escapeHtml(message)}</span>
+        </div>
+        <button type="button" class="toast-close" aria-label="Tutup notifikasi">x</button>
+    `;
+
+    const closeToast = () => {
+        toast.classList.add('toast-leaving');
+        setTimeout(() => toast.remove(), 180);
+    };
+
+    toast.querySelector('.toast-close').addEventListener('click', closeToast);
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('toast-visible'));
+    setTimeout(closeToast, type === 'error' ? 7000 : 4800);
+}
+
+function getToastContainer() {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        container.setAttribute('aria-live', 'polite');
+        container.setAttribute('aria-atomic', 'true');
+        document.body.appendChild(container);
+    }
+    return container;
+}
+
+function getToastTitle(type) {
+    if (type === 'success') return 'Berhasil';
+    if (type === 'error') return 'Terjadi kendala';
+    if (type === 'warning') return 'Perhatian';
+    return 'Informasi';
+}
+
+function getToastIcon(type) {
+    if (type === 'success') return '✓';
+    if (type === 'error') return '!';
+    if (type === 'warning') return '!';
+    return 'i';
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 function startQuizFromSession() {
@@ -2036,18 +2097,15 @@ function resetProgress() {
 async function generateAiQuestions() {
     const generateBtn = document.getElementById('generate-ai-questions-btn');
     const originalText = generateBtn ? generateBtn.textContent : '';
+    const requestOptions = getAiQuestionRequestOptions();
 
     try {
         if (typeof QuizSession === 'undefined') {
             throw new Error('Quiz engine belum dimuat');
         }
 
-        if (generateBtn) {
-            generateBtn.disabled = true;
-            generateBtn.textContent = 'Membuat soal...';
-        }
+        setAiGenerationLoading(true, requestOptions);
 
-        const requestOptions = getAiQuestionRequestOptions();
         const allQuestions = getAllLoadedQuestionsForAI();
         const response = await fetch('/api/generate-questions', {
             method: 'POST',
@@ -2078,16 +2136,54 @@ async function generateAiQuestions() {
         activeQuizSession.setTimerDuration(questions.length * 60);
         window.activeQuizSession = activeQuizSession;
 
-        alert(`${questions.length} soal latihan AI berhasil dibuat.\n\nCatatan: soal ini untuk latihan mandiri, bukan soal resmi atau bocoran.`);
+        showToast(`${questions.length} soal latihan AI siap dikerjakan. Soal ini untuk latihan mandiri, bukan soal resmi atau bocoran.`, 'success', 'Soal AI berhasil dibuat');
         startQuizFromSession();
     } catch (error) {
         console.error('Error generating AI questions:', error);
         showError('Error membuat soal AI: ' + error.message);
     } finally {
+        setAiGenerationLoading(false);
         if (generateBtn) {
             generateBtn.disabled = false;
             generateBtn.textContent = originalText || 'Buat Soal Baru AI';
         }
+    }
+}
+
+function setAiGenerationLoading(isLoading, options = null) {
+    const panel = document.querySelector('.ai-question-panel');
+    const status = document.getElementById('ai-generation-status');
+    const statusMessage = document.getElementById('ai-generation-message');
+    const generateBtn = document.getElementById('generate-ai-questions-btn');
+    const controls = [
+        document.getElementById('ai-category-select'),
+        document.getElementById('ai-subcategory-select'),
+        document.getElementById('ai-count-input')
+    ].filter(Boolean);
+
+    if (panel) {
+        panel.classList.toggle('is-generating', isLoading);
+    }
+
+    if (status) {
+        status.style.display = isLoading ? 'flex' : 'none';
+    }
+
+    if (statusMessage && isLoading && options) {
+        const category = options.kategori === 'MIXED' ? 'campuran' : options.kategori;
+        const subcategory = options.subkategori ? ` ${options.subkategori}` : '';
+        statusMessage.textContent = `Membuat ${options.count} soal ${category}${subcategory}. Biasanya selesai dalam beberapa detik.`;
+    }
+
+    controls.forEach(control => {
+        control.disabled = isLoading;
+    });
+
+    if (generateBtn) {
+        generateBtn.disabled = isLoading;
+        generateBtn.innerHTML = isLoading
+            ? '<span class="btn-loader" aria-hidden="true"></span><span>Membuat soal...</span>'
+            : 'Buat Soal AI';
     }
 }
 

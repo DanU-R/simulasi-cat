@@ -203,6 +203,13 @@
                     <!-- Progress content akan diisi oleh JavaScript -->
                 </div>
                 <div class="ai-question-panel">
+                    <div id="ai-generation-status" class="ai-generation-status" aria-live="polite" style="display: none;">
+                        <div class="ai-loader" aria-hidden="true"></div>
+                        <div>
+                            <strong>Menyiapkan soal latihan</strong>
+                            <span id="ai-generation-message">AI sedang menyusun soal baru...</span>
+                        </div>
+                    </div>
                     <div class="ai-field">
                         <label for="ai-category-select">Kategori</label>
                         <select id="ai-category-select">
@@ -252,6 +259,7 @@
             <p>Simulasi CAT KDKMP | Latihan Mandiri</p>
         </footer>
     </div>
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script src="src/question-service.js"></script>
     <script src="src/quiz-engine.js"></script>
