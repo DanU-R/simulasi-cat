@@ -5939,14 +5939,73 @@ body.quiz-active .legend-item {
 
 @media (max-width: 760px) {
   .guide-summary,
+  .landing-panel-summary,
   .developer-summary,
   .developer-panel-content {
     grid-template-columns: 1fr;
   }
 
   .summary-toggle,
+  .landing-panel-summary::after,
   .developer-summary::after,
   .developer-panel-content button {
     width: 100%;
+  }
+}
+
+/* ===== INTERNAL PAGES ===== */
+
+body.page-home .page-guide-content,
+body.page-home .page-practice-content,
+body.page-home .page-progress-content,
+body.page-guide .page-home-content,
+body.page-guide .page-practice-content,
+body.page-guide .page-progress-content,
+body.page-practice .page-home-content,
+body.page-practice .page-guide-content,
+body.page-practice .page-progress-content,
+body.page-progress .page-home-content,
+body.page-progress .page-guide-content,
+body.page-progress .page-practice-content {
+  display: none !important;
+}
+
+.topbar-actions a.is-active,
+.topbar-actions a[aria-current="page"] {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+}
+
+body.page-guide .study-guide-section,
+body.page-progress .summary-section,
+body.page-progress .progress-section {
+  display: block;
+}
+
+body.page-guide .study-guide-section {
+  padding: 0;
+}
+
+body.page-guide .guide-summary,
+body.page-progress .landing-panel-summary {
+  cursor: default;
+}
+
+body.page-guide .summary-toggle,
+body.page-progress .landing-panel-summary::after {
+  display: none;
+}
+
+body.page-guide .compact-guide .guide-overview,
+body.page-guide .compact-guide .test-type-grid,
+body.page-progress .landing-panel-content {
+  display: grid;
+}
+
+@media (max-width: 760px) {
+  .topbar-actions {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

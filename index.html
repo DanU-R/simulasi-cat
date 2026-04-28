@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <nav class="app-topbar" aria-label="Navigasi utama">
-            <a class="brand-mark" href="#">
+            <a class="brand-mark" href="#beranda" data-page-link="home">
                 <span class="brand-icon">CAT</span>
                 <span>
                     <strong>CAT KDKMP</strong>
@@ -18,13 +18,14 @@
                 </span>
             </a>
             <div class="topbar-actions">
-                <a href="#mode-selection-section">Mode</a>
-                <a href="#summary-section">Bank Soal</a>
-                <a href="#progress-section">Progres</a>
+                <a href="#beranda" data-page-link="home">Beranda</a>
+                <a href="#panduan" data-page-link="guide">Panduan</a>
+                <a href="#latihan" data-page-link="practice">Latihan</a>
+                <a href="#progres" data-page-link="progress">Progres</a>
             </div>
         </nav>
 
-        <header class="header landing-hero">
+        <header class="header landing-hero page-home-content">
             <div class="hero-copy">
                 <div class="hero-kicker">CAT Practice Lab</div>
                 <h1>Simulasi CAT KDKMP</h1>
@@ -35,8 +36,8 @@
                     <span>Soal AI opsional</span>
                 </div>
                 <div class="hero-actions">
-                    <a class="btn-primary hero-primary" href="#mode-selection-section">Mulai Latihan</a>
-                    <a class="btn-secondary hero-secondary" href="#summary-section">Lihat Bank Soal</a>
+                    <a class="btn-primary hero-primary" href="#latihan" data-page-link="practice">Mulai Latihan</a>
+                    <a class="btn-secondary hero-secondary" href="#panduan" data-page-link="guide">Baca Panduan</a>
                 </div>
                 <div class="disclaimer">
                     Seluruh soal dalam aplikasi ini adalah soal prediksi orisinal untuk latihan, 
@@ -94,7 +95,7 @@
         </header>
 
         <main class="main">
-            <section class="insight-strip" aria-label="Ringkasan fitur">
+            <section class="insight-strip page-home-content" aria-label="Ringkasan fitur">
                 <div class="insight-item">
                     <span class="insight-label">Bank soal</span>
                     <strong>105 soal</strong>
@@ -112,7 +113,7 @@
                 </div>
             </section>
 
-            <section class="loading-section">
+            <section class="loading-section page-home-content">
                 <h2>Status Loading Bank Soal</h2>
                 <div id="loading-status" class="loading-status">
                     <div class="spinner"></div>
@@ -120,7 +121,7 @@
                 </div>
             </section>
 
-            <details class="study-guide-section compact-guide landing-only-section" aria-labelledby="study-guide-title">
+            <details class="study-guide-section compact-guide landing-only-section page-guide-content" aria-labelledby="study-guide-title" open>
                 <summary class="guide-summary">
                     <div class="section-heading">
                         <span class="section-kicker">Panduan singkat</span>
@@ -194,14 +195,14 @@
                 </div>
             </details>
 
-            <section id="session-restore-section" class="session-restore-section" style="display: none;">
+            <section id="session-restore-section" class="session-restore-section page-practice-content" style="display: none;">
                 <h2>Sesi Latihan Ditemukan</h2>
                 <div class="restore-panel" id="restore-panel">
                     <!-- Restore panel akan diisi oleh JavaScript -->
                 </div>
             </section>
 
-            <section id="mode-selection-section" class="mode-selection-section" style="display: none;">
+            <section id="mode-selection-section" class="mode-selection-section page-practice-content" style="display: none;">
                 <h2>Pilih Mode Latihan</h2>
                 <div class="mode-grid" id="mode-grid">
                     <!-- Mode cards akan diisi oleh JavaScript -->
@@ -211,7 +212,7 @@
                 </div>
             </section>
 
-            <section id="history-section" class="history-section" style="display: none;">
+            <section id="history-section" class="history-section page-practice-content" style="display: none;">
                 <div class="history-page-header">
                     <h2>Riwayat Latihan</h2>
                     <button id="back-from-history-btn" class="btn-secondary">← Kembali ke Beranda</button>
@@ -233,7 +234,7 @@
                 </div>
             </section>
 
-            <section id="history-detail-section" class="history-detail-section" style="display: none;">
+            <section id="history-detail-section" class="history-detail-section page-practice-content" style="display: none;">
                 <div class="history-detail-content" id="history-detail-content">
                     <!-- Detail content akan diisi oleh JavaScript -->
                 </div>
@@ -243,14 +244,14 @@
                 </div>
             </section>
 
-            <section id="config-section" class="config-section" style="display: none;">
+            <section id="config-section" class="config-section page-practice-content" style="display: none;">
                 <h2>Konfigurasi Sesi</h2>
                 <div class="config-panel" id="config-panel">
                     <!-- Configuration panel akan diisi oleh JavaScript -->
                 </div>
             </section>
 
-            <section id="session-summary-section" class="session-summary-section" style="display: none;">
+            <section id="session-summary-section" class="session-summary-section page-practice-content" style="display: none;">
                 <h2>Sesi Berhasil Dibuat</h2>
                 <div class="session-summary" id="session-summary">
                     <!-- Session summary akan diisi oleh JavaScript -->
@@ -260,7 +261,7 @@
                 </div>
             </section>
 
-            <details id="summary-section" class="summary-section landing-panel-collapse" style="display: none;">
+            <details id="summary-section" class="summary-section landing-panel-collapse page-progress-content" style="display: none;" open>
                 <summary class="landing-panel-summary">
                     <div>
                         <span class="section-kicker">Bank soal</span>
@@ -279,7 +280,7 @@
                 </div>
             </details>
 
-            <details id="progress-section" class="progress-section landing-panel-collapse" style="display: none;">
+            <details id="progress-section" class="progress-section landing-panel-collapse page-progress-content" style="display: none;" open>
                 <summary class="landing-panel-summary">
                     <div>
                         <span class="section-kicker">Progres & AI</span>
@@ -333,7 +334,7 @@
                 </div>
             </section>
 
-            <details id="validation-section" class="validation-section developer-panel landing-only-section">
+            <details id="validation-section" class="validation-section developer-panel landing-only-section page-home-content">
                 <summary class="developer-summary">
                     <span class="section-kicker">Developer tools</span>
                     <div>

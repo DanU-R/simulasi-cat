@@ -335,6 +335,9 @@ class QuestionBankLoader {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Aplikasi CAT KDKMP dimulai');
     
+    setupAppNavigation();
+    setAppPage(getPageFromHash(), { scroll: false });
+
     // Inisialisasi loader
     window.questionLoader = new QuestionBankLoader();
     
@@ -343,7 +346,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Setup validation button
     setupValidationButton();
-    setupLandingPanelAnchors();
     
     // Inisialisasi quiz engine components (jika tersedia)
     initializeQuizEngine();
@@ -359,6 +361,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Inisialisasi progress service
     initializeProgressService();
+
+    setAppPage(getPageFromHash(), { scroll: false });
 });
 
 function initializeQuizEngine() {
@@ -444,19 +448,83 @@ function setupValidationButton() {
     });
 }
 
-function setupLandingPanelAnchors() {
-    const openPanelFromHash = () => {
-        const hash = window.location.hash.replace('#', '');
-        if (!hash) return;
+function setupAppNavigation() {
+    document.querySelectorAll('[data-page-link]').forEach(link => {
+        link.addEventListener('click', event => {
+            const page = link.dataset.pageLink;
+            if (!page) return;
+            event.preventDefault();
+            setAppPage(page);
+            window.history.pushState(null, '', getHashForPage(page));
+        });
+    });
 
-        const target = document.getElementById(hash);
-        if (target && target.tagName.toLowerCase() === 'details') {
-            target.open = true;
+    window.addEventListener('hashchange', () => {
+        setAppPage(getPageFromHash());
+    });
+}
+
+function getPageFromHash() {
+    const hash = window.location.hash.replace('#', '').toLowerCase();
+    if (hash === 'panduan') return 'guide';
+    if (hash === 'latihan' || hash === 'mode-selection-section') return 'practice';
+    if (hash === 'progres' || hash === 'summary-section' || hash === 'progress-section') return 'progress';
+    return 'home';
+}
+
+function getHashForPage(page) {
+    if (page === 'guide') return '#panduan';
+    if (page === 'practice') return '#latihan';
+    if (page === 'progress') return '#progres';
+    return '#beranda';
+}
+
+function setAppPage(page = 'home', { scroll = true } = {}) {
+    const normalizedPage = ['home', 'guide', 'practice', 'progress'].includes(page) ? page : 'home';
+    document.body.classList.remove('page-home', 'page-guide', 'page-practice', 'page-progress');
+    document.body.classList.add(`page-${normalizedPage}`);
+
+    document.querySelectorAll('[data-page-link]').forEach(link => {
+        const isActive = link.dataset.pageLink === normalizedPage;
+        link.classList.toggle('is-active', isActive);
+        if (isActive) {
+            link.setAttribute('aria-current', 'page');
+        } else {
+            link.removeAttribute('aria-current');
         }
-    };
+    });
 
-    window.addEventListener('hashchange', openPanelFromHash);
-    openPanelFromHash();
+    if (normalizedPage === 'guide') {
+        const guideSection = document.querySelector('.study-guide-section');
+        if (guideSection) guideSection.open = true;
+    }
+
+    if (normalizedPage === 'progress') {
+        const summarySection = document.getElementById('summary-section');
+        const progressSection = document.getElementById('progress-section');
+        if (summarySection) {
+            summarySection.open = true;
+            showSectionElement(summarySection);
+        }
+        if (progressSection) {
+            progressSection.open = true;
+            showSectionElement(progressSection);
+        }
+        if (typeof renderProgressSection === 'function') {
+            renderProgressSection();
+        }
+    }
+
+    if (normalizedPage === 'practice') {
+        const modeSelectionSection = document.getElementById('mode-selection-section');
+        if (modeSelectionSection && window.questionLoader?.isLoadingComplete) {
+            showSectionElement(modeSelectionSection);
+        }
+    }
+
+    if (scroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 // Utility functions untuk debugging
@@ -1057,6 +1125,8 @@ function showSessionSummary() {
 }
 
 function showModeSelection() {
+    setAppPage('practice');
+
     // Reset configuration
     if (modeConfigManager) {
         modeConfigManager.reset();
@@ -1070,8 +1140,9 @@ function showModeSelection() {
     // Hide history sections
     hideHistorySection();
     
-    // Show landing sections
-    showLandingSections();
+    // Show practice landing section
+    const modeSelection = document.getElementById('mode-selection-section');
+    if (modeSelection) showSectionElement(modeSelection);
     
     // Scroll to mode selection or top
     const modeSelectionSection = document.getElementById('mode-selection-section');
@@ -1487,6 +1558,8 @@ function showHistorySection() {
             return;
         }
 
+        setAppPage('practice', { scroll: false });
+
         // Hide all landing sections
         hideLandingSections();
 
@@ -1533,6 +1606,8 @@ function hideLandingSections() {
 
 // Helper function to show landing sections
 function showLandingSections() {
+    setAppPage('home');
+
     // Show main landing sections
     const insightStrip = document.querySelector('.insight-strip');
     const loadingSection = document.querySelector('.loading-section');
@@ -1544,9 +1619,9 @@ function showLandingSections() {
     if (insightStrip) showSectionElement(insightStrip, '');
     if (loadingSection) showSectionElement(loadingSection);
     if (studyGuideSection) showSectionElement(studyGuideSection);
-    if (modeSelectionSection) showSectionElement(modeSelectionSection);
-    if (summarySection) showSectionElement(summarySection);
     if (validationSection) showSectionElement(validationSection);
+    if (modeSelectionSection) modeSelectionSection.style.display = 'none';
+    if (summarySection) summarySection.style.display = 'none';
 
     // Keep these hidden until user interaction
     const configSection = document.getElementById('config-section');
