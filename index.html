@@ -260,6 +260,20 @@
         </footer>
     </div>
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <div id="confirm-modal" class="confirm-modal" aria-hidden="true">
+        <div class="confirm-backdrop" data-confirm-action="cancel"></div>
+        <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+            <div class="confirm-icon" id="confirm-icon" aria-hidden="true">!</div>
+            <div class="confirm-content">
+                <h3 id="confirm-title">Konfirmasi</h3>
+                <p id="confirm-message">Lanjutkan tindakan ini?</p>
+            </div>
+            <div class="confirm-actions">
+                <button type="button" id="confirm-cancel-btn" class="btn-secondary">Batal</button>
+                <button type="button" id="confirm-accept-btn" class="btn-danger">Lanjutkan</button>
+            </div>
+        </div>
+    </div>
 
     <script src="src/question-service.js"></script>
     <script src="src/quiz-engine.js"></script>

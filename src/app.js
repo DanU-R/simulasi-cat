@@ -1095,6 +1095,69 @@ function escapeHtml(value) {
         .replace(/'/g, '&#039;');
 }
 
+function showConfirmDialog({
+    title = 'Konfirmasi',
+    message = 'Lanjutkan tindakan ini?',
+    confirmText = 'Lanjutkan',
+    cancelText = 'Batal',
+    variant = 'danger'
+} = {}) {
+    const modal = document.getElementById('confirm-modal');
+    const titleEl = document.getElementById('confirm-title');
+    const messageEl = document.getElementById('confirm-message');
+    const iconEl = document.getElementById('confirm-icon');
+    const acceptBtn = document.getElementById('confirm-accept-btn');
+    const cancelBtn = document.getElementById('confirm-cancel-btn');
+
+    if (!modal || !titleEl || !messageEl || !acceptBtn || !cancelBtn) {
+        return Promise.resolve(false);
+    }
+
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+    acceptBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+    iconEl.textContent = variant === 'danger' ? '!' : '?';
+
+    modal.classList.remove('confirm-danger', 'confirm-info');
+    modal.classList.add(variant === 'danger' ? 'confirm-danger' : 'confirm-info');
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+
+    return new Promise(resolve => {
+        let settled = false;
+
+        const cleanup = result => {
+            if (settled) return;
+            settled = true;
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            acceptBtn.removeEventListener('click', onAccept);
+            cancelBtn.removeEventListener('click', onCancel);
+            modal.removeEventListener('click', onBackdrop);
+            document.removeEventListener('keydown', onKeydown);
+            resolve(result);
+        };
+
+        const onAccept = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+        const onBackdrop = event => {
+            if (event.target?.dataset?.confirmAction === 'cancel') {
+                cleanup(false);
+            }
+        };
+        const onKeydown = event => {
+            if (event.key === 'Escape') cleanup(false);
+        };
+
+        acceptBtn.addEventListener('click', onAccept);
+        cancelBtn.addEventListener('click', onCancel);
+        modal.addEventListener('click', onBackdrop);
+        document.addEventListener('keydown', onKeydown);
+        setTimeout(() => cancelBtn.focus(), 0);
+    });
+}
+
 function startQuizFromSession() {
     try {
         if (!activeQuizSession) {
@@ -1929,7 +1992,7 @@ function setupProgressEvents() {
     // Reset progress button
     const resetProgressBtn = document.getElementById('reset-progress-btn');
     if (resetProgressBtn) {
-        resetProgressBtn.addEventListener('click', resetProgress);
+        resetProgressBtn.addEventListener('click', resetProgressWithDialog);
     }
 
     const generateAiQuestionsBtn = document.getElementById('generate-ai-questions-btn');
@@ -2091,6 +2154,37 @@ function resetProgress() {
             console.error('Error resetting progress:', error);
             showError('Error mereset progress: ' + error.message);
         }
+    }
+}
+
+async function resetProgressWithDialog() {
+    if (!progressService) {
+        showError('Progress service tidak tersedia');
+        return;
+    }
+
+    const confirmed = await showConfirmDialog({
+        title: 'Reset progres soal?',
+        message: 'Semua tanda soal yang pernah dikerjakan akan dihapus. Riwayat latihan dan sesi aktif tetap tersimpan.',
+        confirmText: 'Reset Progres',
+        cancelText: 'Batal',
+        variant: 'danger'
+    });
+
+    if (!confirmed) return;
+
+    try {
+        const success = progressService.resetSeenProgress();
+        if (success) {
+            renderProgressSection();
+            showToast('Progres soal berhasil direset. Riwayat latihan dan sesi aktif tetap tersimpan.', 'success', 'Progres direset');
+            console.log('Progress berhasil direset');
+        } else {
+            showError('Gagal mereset progress');
+        }
+    } catch (error) {
+        console.error('Error resetting progress:', error);
+        showError('Error mereset progress: ' + error.message);
     }
 }
 

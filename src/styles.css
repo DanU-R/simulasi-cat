@@ -4941,6 +4941,79 @@ textarea:focus {
   color: #c2410c;
 }
 
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.confirm-modal.is-open {
+  display: flex;
+}
+
+.confirm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.56);
+  backdrop-filter: blur(8px);
+}
+
+.confirm-dialog {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  width: min(520px, 100%);
+  padding: 22px;
+  border: 1px solid #e3e8ef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 28px 80px rgba(15, 23, 42, 0.28);
+  transform: translateY(0);
+}
+
+.confirm-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #fee2e2;
+  color: #b42318;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.confirm-info .confirm-icon {
+  background: #eef4ff;
+  color: #1d4ed8;
+}
+
+.confirm-content h3 {
+  margin: 0 0 8px;
+  color: #101828;
+  font-size: 1.25rem;
+}
+
+.confirm-content p {
+  margin: 0;
+  color: #475467;
+  line-height: 1.55;
+}
+
+.confirm-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
 .quiz-header,
 .question-container,
 .navigation-panel,
@@ -5054,6 +5127,18 @@ textarea:focus {
   .toast-container {
     right: 14px;
     bottom: 14px;
+  }
+
+  .confirm-dialog {
+    grid-template-columns: 1fr;
+  }
+
+  .confirm-actions {
+    flex-direction: column-reverse;
+  }
+
+  .confirm-actions button {
+    width: 100%;
   }
 }
 
