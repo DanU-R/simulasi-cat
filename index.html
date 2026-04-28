@@ -120,12 +120,15 @@
                 </div>
             </section>
 
-            <section class="study-guide-section" aria-labelledby="study-guide-title">
-                <div class="section-heading">
-                    <span class="section-kicker">Panduan singkat</span>
-                    <h2 id="study-guide-title">Pahami Jenis Tes Sebelum Mulai</h2>
-                    <p>Kenali karakter soal, lalu pilih mode latihan yang sesuai. Cara ini membuat latihan lebih terarah dan tidak sekadar menghafal jawaban.</p>
-                </div>
+            <details class="study-guide-section compact-guide landing-only-section" aria-labelledby="study-guide-title">
+                <summary class="guide-summary">
+                    <div class="section-heading">
+                        <span class="section-kicker">Panduan singkat</span>
+                        <h2 id="study-guide-title">Pahami Jenis Tes Sebelum Mulai</h2>
+                        <p>Ringkasan TPK, TMK, dan tipe soal tersedia sebagai referensi. Buka panel ini saat ingin belajar konsepnya.</p>
+                    </div>
+                    <span class="summary-toggle" aria-hidden="true"></span>
+                </summary>
 
                 <div class="guide-overview">
                     <article class="guide-card">
@@ -189,7 +192,7 @@
                         <span>Cek jumlah sisi, orientasi, simetri, dan elemen yang berubah.</span>
                     </article>
                 </div>
-            </section>
+            </details>
 
             <section id="session-restore-section" class="session-restore-section" style="display: none;">
                 <h2>Sesi Latihan Ditemukan</h2>
@@ -257,8 +260,15 @@
                 </div>
             </section>
 
-            <section id="summary-section" class="summary-section" style="display: none;">
-                <h2>Ringkasan Bank Soal</h2>
+            <details id="summary-section" class="summary-section landing-panel-collapse" style="display: none;">
+                <summary class="landing-panel-summary">
+                    <div>
+                        <span class="section-kicker">Bank soal</span>
+                        <h2>Ringkasan Bank Soal</h2>
+                        <p>Lihat komposisi soal TPK dan TMK yang tersedia di aplikasi.</p>
+                    </div>
+                </summary>
+                <div class="landing-panel-content">
                 <div class="summary-grid" id="summary-grid">
                     <!-- Summary cards akan diisi oleh JavaScript -->
                 </div>
@@ -266,10 +276,18 @@
                 <div class="total-summary" id="total-summary">
                     <!-- Total summary akan diisi oleh JavaScript -->
                 </div>
-            </section>
+                </div>
+            </details>
 
-            <section id="progress-section" class="progress-section" style="display: none;">
-                <h2>Progres Bank Soal</h2>
+            <details id="progress-section" class="progress-section landing-panel-collapse" style="display: none;">
+                <summary class="landing-panel-summary">
+                    <div>
+                        <span class="section-kicker">Progres & AI</span>
+                        <h2>Progres Bank Soal</h2>
+                        <p>Cek progres, reset latihan, atau buat soal baru dengan AI.</p>
+                    </div>
+                </summary>
+                <div class="landing-panel-content">
                 <div class="progress-content" id="progress-content">
                     <!-- Progress content akan diisi oleh JavaScript -->
                 </div>
@@ -305,7 +323,8 @@
                     <button id="download-progress-btn" class="btn-secondary">📥 Download Progres JSON</button>
                     <button id="reset-progress-btn" class="btn-danger">🧹 Reset Progres Soal</button>
                 </div>
-            </section>
+                </div>
+            </details>
 
             <section id="error-section" class="error-section" style="display: none;">
                 <h2>Error Loading</h2>
@@ -314,16 +333,24 @@
                 </div>
             </section>
 
-            <section class="validation-section">
-                <h2>Validasi JSON</h2>
-                <p>Untuk menjalankan validasi lengkap bank soal, gunakan command berikut di terminal:</p>
-                <div class="command-box">
-                    <code>npm run validate:questions</code>
+            <details id="validation-section" class="validation-section developer-panel landing-only-section">
+                <summary class="developer-summary">
+                    <span class="section-kicker">Developer tools</span>
+                    <div>
+                        <h2>Validasi JSON</h2>
+                        <p>Opsional untuk mengecek struktur bank soal lokal. Panel ini hanya tampil di landing page.</p>
+                    </div>
+                </summary>
+                <div class="developer-panel-content">
+                    <p>Untuk menjalankan validasi lengkap bank soal, gunakan command berikut di terminal:</p>
+                    <div class="command-box">
+                        <code>npm run validate:questions</code>
+                    </div>
+                    <button id="validation-btn" class="btn-secondary">
+                        Tampilkan Instruksi Validasi
+                    </button>
                 </div>
-                <button id="validation-btn" class="btn-secondary">
-                    Tampilkan Instruksi Validasi
-                </button>
-            </section>
+            </details>
         </main>
 
         <footer class="footer">

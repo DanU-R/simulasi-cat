@@ -5320,6 +5320,12 @@ body.quiz-active .landing-hero,
 body.quiz-active .insight-strip,
 body.quiz-active .loading-section,
 body.quiz-active .study-guide-section,
+body.quiz-active .mode-selection-section,
+body.quiz-active .config-section,
+body.quiz-active .session-summary-section,
+body.quiz-active .summary-section,
+body.quiz-active .validation-section,
+body.quiz-active .developer-panel,
 body.quiz-active .progress-section,
 body.quiz-active .footer {
   display: none !important;
@@ -5786,5 +5792,161 @@ body.quiz-active .legend-item {
   body.quiz-active .answer-option {
     grid-template-columns: auto 1fr;
     padding: 13px;
+  }
+}
+
+/* ===== COMPACT PROFESSIONAL LANDING ===== */
+
+.compact-guide,
+.landing-panel-collapse,
+.developer-panel {
+  display: block;
+  overflow: hidden;
+  padding: 0;
+}
+
+.guide-summary,
+.landing-panel-summary,
+.developer-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.guide-summary::-webkit-details-marker,
+.landing-panel-summary::-webkit-details-marker,
+.developer-summary::-webkit-details-marker {
+  display: none;
+}
+
+.guide-summary .section-heading,
+.landing-panel-summary .section-heading,
+.developer-summary .section-heading {
+  max-width: 860px;
+}
+
+.guide-summary h2,
+.landing-panel-summary h2,
+.developer-summary h2 {
+  margin: 0 0 6px;
+}
+
+.guide-summary p,
+.landing-panel-summary p,
+.developer-summary p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.summary-toggle,
+.landing-panel-summary::after,
+.developer-summary::after {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 116px;
+  min-height: 42px;
+  border: 1px solid #dbe3ef;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1d4ed8;
+  font-weight: 900;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+}
+
+.summary-toggle::before {
+  content: "Buka panduan";
+}
+
+.compact-guide[open] .summary-toggle::before {
+  content: "Tutup";
+}
+
+.developer-summary::after {
+  content: "Buka";
+}
+
+.landing-panel-summary::after {
+  content: "Buka";
+}
+
+.landing-panel-collapse[open] .landing-panel-summary::after {
+  content: "Tutup";
+}
+
+.developer-panel[open] .developer-summary::after {
+  content: "Tutup";
+}
+
+.compact-guide .guide-overview,
+.compact-guide .test-type-grid {
+  padding: 0 22px 22px;
+}
+
+.landing-panel-content {
+  display: grid;
+  gap: 18px;
+  padding: 0 22px 22px;
+}
+
+.compact-guide .test-type-grid {
+  padding-top: 0;
+}
+
+.developer-panel-content {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 0 22px 22px;
+}
+
+.developer-panel-content p,
+.developer-panel-content .command-box,
+.developer-panel-content button {
+  margin: 0;
+}
+
+.developer-panel-content button {
+  min-width: 190px;
+}
+
+.compact-guide:not([open]) .guide-overview,
+.compact-guide:not([open]) .test-type-grid,
+.landing-panel-collapse:not([open]) .landing-panel-content,
+.developer-panel:not([open]) .developer-panel-content {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .landing-hero {
+    min-height: auto;
+  }
+
+  .hero-copy {
+    padding-block: 8px;
+  }
+
+  .hero-screen {
+    max-width: 440px;
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .guide-summary,
+  .developer-summary,
+  .developer-panel-content {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-toggle,
+  .developer-summary::after,
+  .developer-panel-content button {
+    width: 100%;
   }
 }

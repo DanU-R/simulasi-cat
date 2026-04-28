@@ -343,6 +343,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Setup validation button
     setupValidationButton();
+    setupLandingPanelAnchors();
     
     // Inisialisasi quiz engine components (jika tersedia)
     initializeQuizEngine();
@@ -436,17 +437,26 @@ function initializeQuizEngine() {
 
 function setupValidationButton() {
     const validationBtn = document.getElementById('validation-btn');
+    if (!validationBtn) return;
     
     validationBtn.addEventListener('click', () => {
-        alert(`Untuk menjalankan validasi lengkap, buka terminal dan jalankan:
-
-npm run validate:questions
-
-Atau langsung dengan Node.js:
-node tools/validate-questions.js
-
-Pastikan Anda berada di direktori root project.`);
+        showToast('Jalankan npm run validate:questions dari direktori root project. Alternatif langsung: node tools/validate-questions.js', 'info', 'Instruksi Validasi');
     });
+}
+
+function setupLandingPanelAnchors() {
+    const openPanelFromHash = () => {
+        const hash = window.location.hash.replace('#', '');
+        if (!hash) return;
+
+        const target = document.getElementById(hash);
+        if (target && target.tagName.toLowerCase() === 'details') {
+            target.open = true;
+        }
+    };
+
+    window.addEventListener('hashchange', openPanelFromHash);
+    openPanelFromHash();
 }
 
 // Utility functions untuk debugging
@@ -661,6 +671,7 @@ function showConfigurationPanel(mode) {
     `;
 
     configPanel.innerHTML = configHTML;
+    hideLandingOnlySections();
     configSection.style.display = 'block';
 
     // Setup configuration events
@@ -1037,6 +1048,7 @@ function showSessionSummary() {
     }
 
     // Hide other sections and show summary
+    hideLandingOnlySections();
     document.getElementById('mode-selection-section').style.display = 'none';
     document.getElementById('config-section').style.display = 'none';
     sessionSummarySection.style.display = 'block';
@@ -1491,10 +1503,12 @@ function showHistorySection() {
 function hideLandingSections() {
     const landingSections = [
         'loading-section',
+        'study-guide-section',
         'mode-selection-section',
         'config-section',
         'session-summary-section',
         'summary-section',
+        'progress-section',
         'validation-section',
         'error-section',
         'session-restore-section'
@@ -1511,15 +1525,19 @@ function hideLandingSections() {
 // Helper function to show landing sections
 function showLandingSections() {
     // Show main landing sections
+    const insightStrip = document.querySelector('.insight-strip');
     const loadingSection = document.querySelector('.loading-section');
+    const studyGuideSection = document.querySelector('.study-guide-section');
     const modeSelectionSection = document.getElementById('mode-selection-section');
     const summarySection = document.getElementById('summary-section');
     const validationSection = document.querySelector('.validation-section');
 
-    if (loadingSection) loadingSection.style.display = 'block';
-    if (modeSelectionSection) modeSelectionSection.style.display = 'block';
-    if (summarySection) summarySection.style.display = 'block';
-    if (validationSection) validationSection.style.display = 'block';
+    if (insightStrip) showSectionElement(insightStrip, '');
+    if (loadingSection) showSectionElement(loadingSection);
+    if (studyGuideSection) showSectionElement(studyGuideSection);
+    if (modeSelectionSection) showSectionElement(modeSelectionSection);
+    if (summarySection) showSectionElement(summarySection);
+    if (validationSection) showSectionElement(validationSection);
 
     // Keep these hidden until user interaction
     const configSection = document.getElementById('config-section');
@@ -1531,6 +1549,36 @@ function showLandingSections() {
     if (sessionSummarySection) sessionSummarySection.style.display = 'none';
     if (errorSection) errorSection.style.display = 'none';
     if (sessionRestoreSection) sessionRestoreSection.style.display = 'none';
+}
+
+function hideLandingOnlySections() {
+    const landingOnlySelectors = [
+        '.insight-strip',
+        '.loading-section',
+        '.study-guide-section',
+        '#summary-section',
+        '#progress-section',
+        '#validation-section'
+    ];
+
+    landingOnlySelectors.forEach(selector => {
+        const section = document.querySelector(selector);
+        if (section) {
+            hideSectionElement(section);
+        }
+    });
+}
+
+function showSectionElement(section, display = 'block') {
+    section.hidden = false;
+    section.removeAttribute('aria-hidden');
+    section.style.display = display;
+}
+
+function hideSectionElement(section) {
+    section.hidden = true;
+    section.setAttribute('aria-hidden', 'true');
+    section.style.display = 'none';
 }
 
 // Helper function to hide history section
