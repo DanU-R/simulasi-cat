@@ -1,18 +1,11 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "routes": [
+  "outputDirectory": "public",
+  "rewrites": [
     {
-      "src": "/api/generate-questions",
-      "dest": "/api/generate-questions.js"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/.*",
-      "dest": "/index.html"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }

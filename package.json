@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Simulasi CAT KDKMP - Bank Soal dan Validasi",
   "main": "server.js",
+  "private": true,
   "scripts": {
     "validate:questions": "node tools/validate-questions.js",
     "test:quiz": "node tools/test-quiz-engine.js",
