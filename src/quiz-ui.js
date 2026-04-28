@@ -7,6 +7,7 @@ class QuizUI {
     constructor() {
         this.quizSession = null;
         this.isQuizActive = false;
+        document.body.classList.remove('quiz-active');
         this.currentQuestionElement = null;
         this.navigationElement = null;
         this.questionNumbersElement = null;
@@ -34,6 +35,7 @@ class QuizUI {
         this.updateDisplay();
         this.startQuizTimer();
         this.startAutoSave();
+        document.body.classList.add('quiz-active');
     }
 
     /**
@@ -91,7 +93,10 @@ class QuizUI {
 
         section.innerHTML = `
             <div class="quiz-header">
-                <h2>${modeName}</h2>
+                <div class="quiz-title-block">
+                    <span class="quiz-kicker">Ruang Latihan</span>
+                    <h2>${modeName}</h2>
+                </div>
                 <div class="quiz-info">
                     <div class="quiz-progress">
                         <span id="progress-text">Soal 1 dari ${this.quizSession.questions.length}</span>
@@ -131,7 +136,10 @@ class QuizUI {
                 </div>
 
                 <div class="question-numbers-panel">
-                    <h3>Nomor Soal</h3>
+                    <div class="question-numbers-header">
+                        <span>Navigasi</span>
+                        <h3>Nomor Soal</h3>
+                    </div>
                     <div id="question-numbers" class="question-numbers">
                         <!-- Question numbers akan diisi oleh JavaScript -->
                     </div>
@@ -308,6 +316,7 @@ class QuizUI {
 
         questionElement.innerHTML = `
             <div class="question-header">
+                <div class="question-number-label">Pertanyaan ${this.quizSession.currentIndex + 1}</div>
                 <div class="question-meta">
                     <span class="badge question-id">${question.id}</span>
                     <span class="badge question-category">${question.kategori}</span>
@@ -511,7 +520,7 @@ class QuizUI {
     /**
      * Tampilkan konfirmasi selesai
      */
-    showFinishConfirmation() {
+    async showFinishConfirmation() {
         const unansweredCount = this.quizSession.getUnansweredCount();
         
         let message = 'Selesaikan latihan?';
@@ -519,7 +528,17 @@ class QuizUI {
             message += ` Masih ada ${unansweredCount} soal yang belum dijawab. Jawaban yang kosong akan dihitung 0.`;
         }
 
-        if (confirm(message)) {
+        const confirmed = typeof showConfirmDialog === 'function'
+            ? await showConfirmDialog({
+                title: 'Selesaikan latihan?',
+                message,
+                confirmText: 'Selesai Latihan',
+                cancelText: 'Lanjut Mengerjakan',
+                variant: 'info'
+            })
+            : confirm(message);
+
+        if (confirmed) {
             this.finishQuiz();
         }
     }
@@ -1210,6 +1229,7 @@ class QuizUI {
         // Reset quiz state
         this.quizSession = null;
         this.isQuizActive = false;
+        document.body.classList.remove('quiz-active');
         window.activeQuizSession = null;
 
         // Show mode selection
@@ -1238,6 +1258,7 @@ class QuizUI {
         if (quizSection) quizSection.remove();
         if (resultsSection) resultsSection.remove();
         if (reviewSection) reviewSection.remove();
+        document.body.classList.remove('quiz-active');
 
         // Stop auto-save
         this.stopAutoSave();
@@ -1300,10 +1321,20 @@ class QuizUI {
     /**
      * Show clear progress confirmation
      */
-    showClearProgressConfirmation() {
-        const message = 'Hapus progres latihan ini?\n\nSemua jawaban dan progres akan hilang dan tidak dapat dikembalikan.\n\nAnda akan kembali ke pilihan mode.';
+    async showClearProgressConfirmation() {
+        const message = 'Semua jawaban dan progres latihan ini akan dihapus. Anda akan kembali ke pilihan mode.';
         
-        if (confirm(message)) {
+        const confirmed = typeof showConfirmDialog === 'function'
+            ? await showConfirmDialog({
+                title: 'Hapus progres latihan?',
+                message,
+                confirmText: 'Hapus Progres',
+                cancelText: 'Batal',
+                variant: 'danger'
+            })
+            : confirm(message);
+
+        if (confirmed) {
             this.clearProgress();
         }
     }
